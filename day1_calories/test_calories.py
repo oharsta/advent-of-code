@@ -6,12 +6,12 @@ from base import read_lines
 class TestCalories(TestCase):
 
     def test_max_calories(self):
-        input = read_lines("calories/input.txt")
+        input = read_lines("day1_calories/input.txt")
         results = {}
         for line in input:
             i = len(results)
             new_line = line == "\n"
-            nbr = int(line.replace("\n", "")) if not new_line else 0
+            nbr = int(line.strip()) if not new_line else 0
             if new_line:
                 results[i + 1] = 0
             elif i in results:
