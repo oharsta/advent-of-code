@@ -1,7 +1,7 @@
 import os
 
 
-def read_lines(file_name: str) -> str:
+def read_lines(file_name: str) -> list[str]:
     file = f"{os.path.dirname(os.path.realpath(__file__))}/{file_name}"
     with open(file) as f:
         return f.readlines()
