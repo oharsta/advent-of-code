@@ -6,65 +6,29 @@ from base import read_lines
 class TestTrees(TestCase):
 
     def test_trees(self):
-        def is_edge_tree(all_trees, row, column):
-            return row == 0 or row == len(all_trees) - 1 or column == 0 or column == len(all_trees[0]) - 1
+        trees = [[int(tree) for tree in line] for line in [l.strip() for l in read_lines("day8_trees/input.txt")]]
+        nbr_rows = len(trees)
+        nbr_columns = len(trees[0])
 
-        def is_visible(all_trees, row, column, tree):
-            if is_edge_tree(all_trees, row, column):
-                return True
-            left_visible = max([t for i, t in enumerate(all_trees[row]) if i < column]) < tree
-            right_visible = max([t for i, t in enumerate(all_trees[row]) if i > column]) < tree
-            top_visible = max([all_trees[i][column] for i in range(0, len(all_trees[0])) if i < row]) < tree
-            bottom_visible = max([all_trees[i][column] for i in range(0, len(all_trees[0])) if i > row]) < tree
-            visible = top_visible or bottom_visible or left_visible or right_visible
-            return visible
+        def adjacent_trees(tree_instance, xaxis, yaxis, move, res=[]):
+            x, y = xaxis + move[0], yaxis + move[1]
+            within_bounds = -1 < x < nbr_rows and -1 < y < nbr_columns
+            if within_bounds and trees[x][y] < tree_instance:
+                return adjacent_trees(tree_instance, x, y, move, res=res + [trees[x][y]])
+            res_scenic = res + [trees[x][y]] if within_bounds else res
+            return [res, res_scenic]
 
-        def traverse(all_trees, row, column, x_delta, y_delta, tree):
-            try:
-                yield tree > all_trees[row + x_delta][column + y_delta]
-            except IndexError:
-                return
+        visible_trees, scenic_score = 0, 0
+        moves = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+        for row in range(nbr_rows):
+            for column in range(nbr_columns):
+                tree = trees[row][column]
+                up, right, down, left = [adjacent_trees(tree, row, column, move) for move in moves]
+                free_row_view = len(up[0]) == row or nbr_rows - 1 == row + len(down[0])
+                free_column_view = nbr_columns - 1 == column + len(right[0]) or column - len(left[0]) == 0
+                if free_row_view or free_column_view:
+                    visible_trees += 1
+                scenic_score = max(scenic_score, len(up[1]) * len(right[1]) * len(down[1]) * len(left[1]))
 
-        def scenic_score(all_trees, row, column, tree):
-            if is_edge_tree(all_trees, row, column):
-                return 0
-            max_column, max_row = len(all_trees[0]) - 1, len(all_trees) - 1
-            left_visible, i = 1, column - 1
-            while i > 0 and tree > all_trees[row][i]:
-                left_visible += 1
-                i -= 1
-            right_visible, i = 1, column + 1
-            while i < max_column and tree > all_trees[row][i]:
-                right_visible += 1
-                i += 1
-            top_visible, i = 1, row - 1
-            while i > 0 and tree > all_trees[i][column]:
-                top_visible += 1
-                i -= 1
-            bottom_visible, i = 1, row + 1
-            while i < max_row and tree > all_trees[i][column]:
-                bottom_visible += 1
-                i += 1
-            return left_visible * right_visible * top_visible * bottom_visible
-
-        lines = read_lines("day8_trees/input.txt")
-
-        trees = []
-        for line in [l.strip() for l in lines]:
-            trees.append([int(tree) for tree in line])
-
-        answer = 0
-        for row_nbr, row_of_trees in enumerate(trees):
-            for column_nbr, tree in enumerate(row_of_trees):
-                if is_visible(trees, row_nbr, column_nbr, tree):
-                    answer += 1
-
-        self.assertEqual(1870, answer)
-
-        answer = 0
-        for row_nbr, row_of_trees in enumerate(trees):
-            for column_nbr, tree in enumerate(row_of_trees):
-                score = scenic_score(trees, row_nbr, column_nbr, tree)
-                answer = max(score, answer)
-
-        self.assertEqual(517440, answer)
+        self.assertEqual(1870, visible_trees)
+        self.assertEqual(517440, scenic_score)
