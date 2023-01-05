@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from base import read_lines
+from src.base import read_lines
 
 
 class TestTuning(TestCase):

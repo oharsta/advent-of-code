@@ -1,12 +1,12 @@
 from unittest import TestCase
 
-from base import read_lines
+from src.base import read_lines
 
 
 class TestTrees(TestCase):
 
     def test_trees(self):
-        trees = [[int(tree) for tree in line] for line in [l.strip() for l in read_lines("day8_trees/input.txt")]]
+        trees = [[int(tree) for tree in line] for line in [line.strip() for line in read_lines("day8_trees/input.txt")]]
         nbr_rows = len(trees)
         nbr_columns = len(trees[0])
 

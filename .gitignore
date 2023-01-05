@@ -1,4 +1,7 @@
 .venv
 .pytest_cache
-todo_day25_snafu
+src/todo_day25_snafu
 *.iml
+htmlcov
+__pycache__
+.coverage

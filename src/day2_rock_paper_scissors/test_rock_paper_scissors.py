@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from base import read_lines
+from src.base import read_lines
 
 """
 Rock (A X) defeats Scissors (C Z), Scissors (C Z) defeats Paper (B Y), and Paper (B Y) defeats Rock (A X)
@@ -31,7 +31,7 @@ class TestRockPaperScissors(TestCase):
 
         # X means you need to lose, Y means you need to end the round in a draw, and Z means you need to win
         score = 0
-        for line in [l.strip() for l in lines]:
+        for line in [line.strip() for line in lines]:
             his = line[0]
             strategy = line[2]
             if strategy == "X":

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from base import read_lines
+from src.base import read_lines
 
 
 class TestDiskSpace(TestCase):
@@ -10,7 +10,7 @@ class TestDiskSpace(TestCase):
 
         files = {}
         paths = []
-        for line in [l.strip() for l in lines]:
+        for line in [line.strip() for line in lines]:
             commands = line.split()
             if commands[0] != "dir" and commands[1] != "ls":
                 if commands[1] == "cd":

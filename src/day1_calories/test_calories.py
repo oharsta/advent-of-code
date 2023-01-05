@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from base import read_lines
+from src.base import read_lines
 
 
 class TestCalories(TestCase):
@@ -9,7 +9,7 @@ class TestCalories(TestCase):
         lines = read_lines("day1_calories/input.txt")
         results = []
         rucksack = []
-        for line in [l.strip() for l in lines]:
+        for line in [line.strip() for line in lines]:
             if line:
                 nbr = int(line.strip())
                 rucksack.append(nbr)
