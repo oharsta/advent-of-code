@@ -10,8 +10,8 @@ class TestRope(TestCase):
             return position[0] + move_to_apply[0], position[1] + move_to_apply[1]
 
         def new_position(leader, follower):
-            # If the head is two steps away then the tail needs to turn also
-            if abs(leader[0] - follower[0]) > 1 or abs(leader[1] - follower[1]) > 1:
+            # If the leader is two steps away then the follower needs to move also
+            if max(abs(leader[0] - follower[0]), abs(leader[1] - follower[1])) > 1:
                 if leader[0] != follower[0]:
                     follower = apply_move(follower, moves["D"] if leader[0] > follower[0] else moves["U"])
                 if leader[1] != follower[1]:
@@ -20,16 +20,11 @@ class TestRope(TestCase):
 
         turns = [(turn[0], int(turn[2:])) for turn in [line.strip() for line in read_lines("day9_rope/input.txt")]]
         moves = {"U": (-1, 0), "R": (0, 1), "D": (1, 0), "L": (0, -1)}
-        tail_positions = set()
-        last_tail_positions = set()
-        head = (0, 0)
-        tails = [(0, 0) for _ in range(0, 9)]
-        tail_positions.add((0, 0))
-        last_tail_positions.add((0, 0))
+        # Initial empty states
+        head, tails, tail_positions, last_tail_positions = (0, 0), [(0, 0) for _ in range(0, 9)], {(0, 0)}, {(0, 0)}
         for turn in turns:
-            move = moves[turn[0]]
             for _ in range(turn[1]):
-                head = apply_move(head, move)
+                head = apply_move(head, moves[turn[0]])
                 tails[0] = new_position(head, tails[0])
                 for i in range(1, len(tails)):
                     tails[i] = new_position(tails[i - 1], tails[i])
